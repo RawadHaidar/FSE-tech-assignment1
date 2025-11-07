@@ -116,6 +116,7 @@ html, body{
     width: clamp(100px, 25vw, 200px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     transition: tasform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
 }
 
 .crown{
