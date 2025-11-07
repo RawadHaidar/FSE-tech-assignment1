@@ -178,6 +178,25 @@ html, body{
     background-color: #0056b3;
 }
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #222;
+  color: white;
+}
+
+td, th {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
 footer{
     color: white;
     width: calc(100% - 2rem);
