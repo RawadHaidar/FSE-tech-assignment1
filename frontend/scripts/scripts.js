@@ -14,11 +14,30 @@ addNameBtn.onclick = () => {
     const name = nameInput.value.trim();
     if (name === "") {
         alert("Name field is empty.");
-    } else {
-        alert('Welcome ' + name + '\nYour score has been saved successfully.');
-        popup.style.display = "none";
-        nameInput.value = "";
-    }
+        return;
+    } 
+    fetch("http://localhost/tech-first-assignment/backend/apis/add_score.php",{
+        method: "POST",
+        headers:{
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({name})
+    })
+    .then(res => res.json())
+    .then(data =>{
+        console.log("Server response:", data);
+        if(data.success){
+            alert(`Welcome ${name}!`)
+            popup.style.display = "none";
+            nameInput.value = "";
+        }else{
+            alert("Error:" +data.error);
+        }
+    }).catch(err =>{
+        console.error("Fetch error:", err);
+        alert("Failed to connect to server.");
+    });
+    
 };
 
 document.addEventListener("DOMContentLoaded", () => {
