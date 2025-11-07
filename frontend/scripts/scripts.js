@@ -40,54 +40,66 @@ addNameBtn.onclick = () => {
     
 };
 
+// document.addEventListener("DOMContentLoaded", () => {
+//   const playerslist = document.getElementById("players-list");
+
+//   fetch("http://localhost/tech-first-assignment/backend/apis/get_players.php")
+//     .then(response => response.json())
+//     .then(data => {
+//       playerslist.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+//     })
+//     .catch(error => {
+//       console.error("Error fetching players:", error);
+//       playerslist.innerHTML = "<p>Failed to load players.</p>";
+//     });
+// });
+
 document.addEventListener("DOMContentLoaded", () => {
     const playerslist = document.getElementById("players-list");
 
     fetch("http://localhost/tech-first-assignment/backend/apis/get_players.php")
-        .then(response => response.json())
-        .then(players => {
-            if (players.length === 0) {
-                playerslist.innerHTML = "<p>No players yet.</p>";
-                return;
-            }
+    .then(response => response.json())
+    .then(json => {
+        if(!json.success || !Array.isArray(json.data)){
+            playerslist.innerHTML = "<p>Invalid response format.</p>";
+            return;
+        }
 
-            
-            players.sort((a, b) => {
-                if (b.score === a.score) {
-                    return a.duration - b.duration;
-                }
-                return b.score - a.score;
-            });
+        const players = json.data;
 
-            let html = `
-                <table border="1" cellpadding="8" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Name</th>
-                            <th>Score</th>
-                            <th>Duration</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
+        if(players.lenght == 0){
+            playerslist.innerHTML="<p>No players yet.</p>"
+        }
 
-            players.forEach((player, index) => {
-                html += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${player.user_name}</td>
-                        <td>${player.score}</td>
-                        <td>${player.duration}</td>
-                    </tr>
-                `;
-            });
+        let html =`
+        <table border="1" cellpadding="8" cellspacing="0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Score</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+        `;
 
-            html += `</tbody></table>`;
-            playerslist.innerHTML = html;
-        })
-        .catch(error => {
-            console.error("Error fetching players:", error);
-            playerslist.innerHTML = "<p>Failed to load leaderboard.</p>";
+        players.forEach((p,i) => {
+            html += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${p.user_name}</td>
+            <td>${p.score}</td>
+            <td>${p.duration}</td>
+          </tr>
+        `;
         });
-});
+
+        html += `</tbody></table>`;
+
+        playerslist.innerHTML = html;
+    }).catch(error =>{
+        console.error("Error fetching players:", error);
+        playerslist.innerHTML = "<p>Failed to load players.</p>";
+    })
+})
